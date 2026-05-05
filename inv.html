@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>come over?</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f7df9e;
+      --paper: #fff7d8;
+      --ink: #171717;
+      --muted: #4d4039;
+      --brown: #7b4b2a;
+      --orange: #ff9f1c;
+      --green: #72b01d;
+      --pink: #ff6b9a;
+      --blue: #4cc9f0;
+      --shadow: rgba(0, 0, 0, 0.22);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,255,255,0.7), transparent 16%),
+        radial-gradient(circle at 85% 20%, rgba(255,107,154,0.22), transparent 20%),
+        radial-gradient(circle at 70% 82%, rgba(76,201,240,0.2), transparent 18%),
+        linear-gradient(135deg, #ffeaa7 0%, #ffc078 52%, #b7e4c7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.14;
+      background-image:
+        linear-gradient(#000 1px, transparent 1px),
+        linear-gradient(90deg, #000 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .phone {
+      width: min(100%, 430px);
+      min-height: 735px;
+      border: 5px solid #111;
+      border-radius: 28px;
+      background: #fff4c7;
+      box-shadow: 12px 14px 0 #111, 0 30px 80px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      min-height: 735px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      background:
+        radial-gradient(circle at 30px 30px, rgba(255,255,255,0.75), transparent 28px),
+        var(--paper);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .sticker {
+      position: absolute;
+      z-index: 6;
+      background: #fff;
+      border: 3px solid #111;
+      box-shadow: 5px 5px 0 #111;
+      border-radius: 14px;
+      padding: 8px 10px;
+      font-size: 0.75rem;
+      letter-spacing: 0.03em;
+      transform: rotate(-6deg);
+      pointer-events: none;
+    }
+
+    .sticker.one {
+      top: 14px;
+      right: 18px;
+      background: #b7ff7a;
+    }
+
+    .sticker.two {
+      left: 18px;
+      bottom: 95px;
+      background: #ffd6e8;
+      transform: rotate(7deg);
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 4;
+      display: inline-block;
+      margin: 8px 0 10px;
+      padding: 8px 12px;
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+    }
+
+    h1 {
+      position: relative;
+      z-index: 4;
+      font-size: clamp(3.6rem, 16vw, 6.4rem);
+      line-height: 0.78;
+      letter-spacing: -0.06em;
+      color: #fff;
+      text-transform: uppercase;
+      -webkit-text-stroke: 3px #111;
+      text-shadow: 5px 5px 0 #111;
+      margin: 10px 0 16px;
+    }
+
+    p {
+      position: relative;
+      z-index: 4;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-weight: 700;
+      line-height: 1.45;
+      font-size: 0.98rem;
+    }
+
+    .subtitle {
+      padding: 12px 14px;
+      border: 3px solid #111;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 6px 6px 0 #111;
+      transform: rotate(1deg);
+      margin-bottom: 18px;
+    }
+
+    .photo-scene {
+      position: relative;
+      z-index: 3;
+      height: 345px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 5px solid #111;
+      box-shadow: 8px 8px 0 #111;
+      background: #ddd;
+      transform: rotate(-1deg);
+    }
+
+    .photo-scene img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.1) contrast(1.04) brightness(0.96);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.18)),
+        radial-gradient(circle at 20% 18%, rgba(255, 231, 135, 0.38), transparent 30%);
+      pointer-events: none;
+    }
+
+    .meme-top,
+    .meme-bottom {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      z-index: 5;
+      color: #fff;
+      font-size: clamp(1.7rem, 8vw, 2.7rem);
+      line-height: 0.9;
+      text-align: center;
+      text-transform: uppercase;
+      -webkit-text-stroke: 2px #111;
+      text-shadow: 3px 3px 0 #111;
+      letter-spacing: -0.03em;
+    }
+
+    .meme-top {
+      top: 14px;
+    }
+
+    .meme-bottom {
+      bottom: 14px;
+    }
+
+    .actions,
+    .choice-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+      position: relative;
+      z-index: 5;
+    }
+
+    button {
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", system-ui, sans-serif;
+      border: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:disabled {
+      opacity: 0.85;
+      cursor: wait;
+    }
+
+    .primary,
+    .secondary,
+    .yes,
+    .maybe {
+      border: 4px solid #111;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 1.03rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      box-shadow: 6px 6px 0 #111;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .primary,
+    .yes {
+      flex: 1;
+      background: var(--orange);
+      color: #111;
+    }
+
+    .secondary,
+    .maybe {
+      background: #fff;
+      color: #111;
+    }
+
+    .primary:hover,
+    .secondary:hover,
+    .yes:hover,
+    .maybe:hover {
+      transform: translate(3px, 3px) rotate(-1deg);
+      box-shadow: 3px 3px 0 #111;
+    }
+
+    .primary:active,
+    .secondary:active,
+    .yes:active,
+    .maybe:active {
+      transform: translate(4px, 4px) scale(0.98);
+      box-shadow: 2px 2px 0 #111;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 4;
+      margin-top: 18px;
+      padding: 16px;
+      border: 4px solid #111;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 8px 8px 0 #111;
+      transform: rotate(0.6deg);
+    }
+
+    .panel > p {
+      color: #2f2f2f;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .plan-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border: 3px solid #111;
+      border-radius: 18px;
+      background: #fff7d8;
+      box-shadow: 4px 4px 0 #111;
+    }
+
+    .plan-item:nth-child(2) { background: #d9f99d; transform: rotate(-0.7deg); }
+    .plan-item:nth-child(3) { background: #ffd6e8; transform: rotate(0.7deg); }
+    .plan-item:nth-child(4) { background: #c8f3ff; transform: rotate(-0.5deg); }
+
+    .plan-image {
+      width: 72px;
+      height: 62px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      border: 3px solid #111;
+      box-shadow: 3px 3px 0 #111;
+      position: relative;
+    }
+
+    .plan-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.08) contrast(1.04);
+    }
+
+    .plan-item strong {
+      display: inline-block;
+      margin-bottom: 4px;
+      color: #111;
+      font-size: 1.02rem;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .plan-item span {
+      display: block;
+      color: #3d3d3d;
+      font-family: Arial, sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      line-height: 1.28;
+    }
+
+    .reaction {
+      min-height: 28px;
+      margin-top: 14px;
+      padding: 8px 10px;
+      color: #111;
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 0.9rem;
+      text-align: center;
+      border-radius: 14px;
+    }
+
+    .final-card {
+      min-height: 735px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .polaroid {
+      position: relative;
+      z-index: 3;
+      padding: 12px 12px 48px;
+      margin: 0 0 24px;
+      border: 5px solid #111;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 9px 9px 0 #111;
+      transform: rotate(-3deg);
+    }
+
+    .mini-photo {
+      height: 270px;
+      border: 4px solid #111;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      background: #ddd;
+    }
+
+    .mini-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.08) contrast(1.02);
+    }
+
+    .caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      color: #111;
+      font-size: 1.45rem;
+      text-transform: uppercase;
+    }
+
+    .final-card h1 {
+      font-size: clamp(3.2rem, 14vw, 5.5rem);
+    }
+
+    .final-card p {
+      background: #fff;
+      border: 4px solid #111;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 6px 6px 0 #111;
+      color: #222;
+      transform: rotate(1deg);
+    }
+
+    .floating {
+      position: fixed;
+      bottom: -40px;
+      z-index: 2;
+      color: #111;
+      animation: floatUp 7s linear infinite;
+      pointer-events: none;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", system-ui, sans-serif;
+      background: #fff;
+      border: 3px solid #111;
+      border-radius: 999px;
+      padding: 4px 8px;
+      box-shadow: 3px 3px 0 #111;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0) rotate(0deg); opacity: 0; }
+      15% { opacity: 1; }
+      to { transform: translateY(-105vh) rotate(18deg); opacity: 0; }
+    }
+
+    @media (max-width: 430px) {
+      body {
+        padding: 8px;
+        align-items: flex-start;
+      }
+
+      .phone {
+        min-height: calc(100vh - 16px);
+        border-radius: 24px;
+        box-shadow: 7px 8px 0 #111, 0 20px 60px var(--shadow);
+      }
+
+      .screen,
+      .final-card {
+        min-height: calc(100vh - 26px);
+        padding: 13px;
+      }
+
+      .photo-scene {
+        height: 330px;
+      }
+
+      .actions,
+      .choice-row {
+        flex-direction: column;
+      }
+
+      .primary,
+      .secondary,
+      .yes,
+      .maybe {
+        width: 100%;
+      }
+
+      .plan-item {
+        grid-template-columns: 66px 1fr;
+      }
+
+      .plan-image {
+        width: 66px;
+        height: 58px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="phone">
+    <section class="screen" id="landing">
+      <div class="sticker one">URGENT</div>
+      <div class="sticker two">low effort plan, high quality vibes</div>
+
+      <div class="eyebrow">official condo invitation</div>
+      <h1>come<br>over?</h1>
+
+      <p class="subtitle">
+        I have prepared absolutely nothing complicated. Just snacks, drinks, movies, and a very serious afternoon nap agenda.
+      </p>
+
+      <div class="photo-scene" aria-label="Meme-style invitation photo">
+        <img src="images/wait.jpg" alt="Cozy afternoon room">
+        <div class="photo-overlay"></div>
+        <div class="meme-top">me waiting</div>
+        <div class="meme-bottom">for you to come over</div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="openInvite">open invite</button>
+        <button class="secondary" id="peekBtn">show me the plan</button>
+      </div>
+    </section>
+
+    <section class="screen hidden" id="invite">
+      <div class="sticker one">very important</div>
+
+      <div class="eyebrow">the plan is simple</div>
+      <h1>nap.<br>snack.<br>movie.</h1>
+
+      <div class="panel">
+        <p>
+          Come over here to my condo. I’ll prepare your favorite snack and drink, put on a movie, and save the comfiest spot beside me.
+        </p>
+
+        <div class="plan-grid">
+          <div class="plan-item">
+            <div class="plan-image">
+              <img src="images/sleep.jpg" alt="Afternoon nap">
+            </div>
+            <div>
+              <strong>nap protocol</strong>
+              <span>Blanket ready. Pillows ready. Productivity cancelled.</span>
+            </div>
+          </div>
+
+          <div class="plan-item">
+            <div class="plan-image">
+              <img src="images/coke.jpg" alt="Favorite drink">
+            </div>
+            <div>
+              <strong>drink secured</strong>
+              <span>Your favorite drink shall be obtained like a sacred quest.</span>
+            </div>
+          </div>
+
+          <div class="plan-item">
+            <div class="plan-image">
+              <img src="images/snacks.jpg" alt="Favorite snack">
+            </div>
+            <div>
+              <strong>snack department</strong>
+              <span>Your favorite snack. Non-negotiable. Extremely serious.</span>
+            </div>
+          </div>
+
+          <div class="plan-item">
+            <div class="plan-image">
+              <img src="images/movies.jpg" alt="Movie time">
+            </div>
+            <div>
+              <strong>movie time</strong>
+              <span>You pick. I pretend to be picky. We watch anyway.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="choice-row">
+          <button class="yes" id="yesBtn">yes, obviously</button>
+          <button class="maybe" id="maybeBtn">hmm... maybe</button>
+        </div>
+
+        <div class="reaction" id="reaction"></div>
+      </div>
+    </section>
+
+    <section class="screen hidden final-card" id="final">
+      <div class="sticker one">approved</div>
+
+      <div class="polaroid">
+        <div class="mini-photo">
+          <img src="images/complete.gif" alt="Cozy afternoon room">
+        </div>
+        <div class="caption">reserved for us</div>
+      </div>
+
+      <div class="eyebrow">mission accepted</div>
+      <h1>i'll come<br>fetch you.</h1>
+      <p>
+        Snacks, drinks, movie, blanket, and sleepy afternoon vibes are now officially loading.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const landing = document.getElementById('landing');
+    const invite = document.getElementById('invite');
+    const final = document.getElementById('final');
+    const openInvite = document.getElementById('openInvite');
+    const peekBtn = document.getElementById('peekBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const maybeBtn = document.getElementById('maybeBtn');
+    const reaction = document.getElementById('reaction');
+
+    const replies = [
+      'wrong button but okay, I respect the drama.',
+      'hmm... snack says you should reconsider.',
+      'the blanket is disappointed but still available.',
+      'movie paused until you make the correct decision.',
+      'I hear maybe, but the condo hears yes.'
+    ];
+
+    let isTransitioning = false;
+
+    function switchScreen(from, to) {
+      if (isTransitioning || from === to) return;
+
+      isTransitioning = true;
+
+      openInvite.disabled = true;
+      peekBtn.disabled = true;
+      yesBtn.disabled = true;
+      maybeBtn.disabled = true;
+
+      from.style.opacity = '0';
+      from.style.transform = 'translateY(12px) rotate(-1deg) scale(0.985)';
+
+      setTimeout(() => {
+        from.classList.add('hidden');
+        to.classList.remove('hidden');
+        to.style.opacity = '0';
+        to.style.transform = 'translateY(12px) rotate(1deg) scale(0.985)';
+
+        requestAnimationFrame(() => {
+          to.style.opacity = '1';
+          to.style.transform = 'translateY(0) rotate(0deg) scale(1)';
+
+          setTimeout(() => {
+            isTransitioning = false;
+            openInvite.disabled = false;
+            peekBtn.disabled = false;
+            yesBtn.disabled = false;
+            maybeBtn.disabled = false;
+          }, 300);
+        });
+      }, 280);
+    }
+
+    openInvite.addEventListener('click', () => switchScreen(landing, invite));
+    peekBtn.addEventListener('click', () => switchScreen(landing, invite));
+
+    yesBtn.addEventListener('click', () => {
+      switchScreen(invite, final);
+      for (let i = 0; i < 18; i++) {
+        setTimeout(createFloating, i * 75);
+      }
+    });
+
+    maybeBtn.addEventListener('click', () => {
+      reaction.textContent = replies[Math.floor(Math.random() * replies.length)];
+      reaction.style.background = '#fff';
+      reaction.style.border = '3px solid #111';
+      reaction.style.boxShadow = '4px 4px 0 #111';
+      maybeBtn.style.transform = `translate(${random(-18, 18)}px, ${random(-10, 10)}px) rotate(${random(-4, 4)}deg)`;
+      setTimeout(() => maybeBtn.style.transform = '', 800);
+    });
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function createFloating() {
+      const symbols = ['YES', 'NAP', 'SNACK', 'MOVIE', 'DRINK', 'W'];
+      const item = document.createElement('span');
+      item.className = 'floating';
+      item.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      item.style.left = `${Math.random() * 100}%`;
+      item.style.fontSize = `${12 + Math.random() * 8}px`;
+      item.style.animationDuration = `${6 + Math.random() * 3}s`;
+      document.body.appendChild(item);
+      setTimeout(() => item.remove(), 10000);
+    }
+  </script>
+</body>
+</html>
